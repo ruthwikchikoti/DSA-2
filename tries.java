@@ -34,8 +34,7 @@ public class tries {
     }
 
     // search for a word in a trie
-
-    public static boolean search(TrieNode root, String word) {
+        public static boolean search(TrieNode root, String word) {
         TrieNode cur = root;
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
@@ -67,6 +66,29 @@ public class tries {
 
 
     // given a list of strings, return the longest common prefix
+    public static String prefix(ArrayList<String> list){
+        TrieNode root = new TrieNode();
+        for(String s : list){
+            TrieNode cur = root;
+            for(int i = 0; i < s.length(); i++){
+                char c = s.charAt(i);
+                if(!cur.Map.containsKey(c)){
+                    cur.Map.put(c,new TrieNode());
+                }
+                cur = cur.Map.get(c);
+            }
+            cur.isEnd = true;
+        }
+        TrieNode cur = root;
+        String prefix = "";
+        while(cur.Map.size() == 1){
+            for(Map.Entry<Character,TrieNode> entry : cur.Map.entrySet()){
+                prefix += entry.getKey();
+                cur = entry.getValue();
+            }
+        }
+        return prefix;
+    }
     
     
 
@@ -75,7 +97,31 @@ public class tries {
 
     // 
     // given a 2d matrix of 0's and 1's, count the number of distinct rows
-    // public static 
+     public static int countDistinctRows(int[][] matrix){
+        TrieNode root = new TrieNode();
+        for(int i = 0; i < matrix.length; i++){
+            TrieNode cur = root;
+            for(int j = 0; j < matrix[0].length; j++){
+                if(!cur.Map.containsKey(matrix[i][j])){
+                    cur.Map.put(matrix[i][j],new TrieNode());
+                }
+                cur = cur.Map.get(matrix[i][j]);
+            }
+            cur.isEnd = true;
+        }
+        return countDistinctRows(root);
+    }
+    public static int countDistinctRows(TrieNode root){
+        if(root.Map.size() == 0){
+            return 1;
+        }
+        int count = 0;
+        for(Map.Entry<Character,TrieNode> entry : root.Map.entrySet()){
+            count += countDistinctRows(entry.getValue());
+        }
+        return count;
+    }
+
 
 
 
@@ -85,30 +131,30 @@ public class tries {
     // given an array of integers, find the pair with maximum XOR using trie
 
 
-    // public static int findMaximumXOR(int[] nums) {
-    //     int max = 0;
-    //     int mask = 0;
+    public static int findMaximumXOR(int[] nums) {
+        int max = 0;
+        int mask = 0;
         
-    //     for (int i = 31; i >= 0; i--) {
-    //         mask |= (1 << i);
-    //         Set<Integer> set = new HashSet<>();
+        for (int i = 31; i >= 0; i--) {
+            mask |= (1 << i);
+            Set<Integer> set = new HashSet<>();
             
-    //         for (int num : nums) {
-    //             set.add(num & mask);
-    //         }
+            for (int num : nums) {
+                set.add(num & mask);
+            }
             
-    //         int temp = max | (1 << i);
+            int temp = max | (1 << i);
             
-    //         for (int prefix : set) {
-    //             if (set.contains(temp ^ prefix)) {
-    //                 max = temp;
-    //                 break;
-    //             }
-    //         }
-    //     }
+            for (int prefix : set) {
+                if (set.contains(temp ^ prefix)) {
+                    max = temp;
+                    break;
+                }
+            }
+        }
         
-    //     return max;
-    // }
+        return max;
+    }
 
 
     // given an array, find the maximum XOR of any subarray using trieNode
