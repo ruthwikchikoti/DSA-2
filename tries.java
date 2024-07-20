@@ -158,10 +158,37 @@ public class tries {
 
 
     // given an array, find the maximum XOR of any subarray using trieNode
-    // public static int findMaximumXOR_subarray(int[] nums) {
+    public static int findMaximumXOR_subarray(int[] nums) {
+        int max = 0;
+        int mask = 0;
+        TrieNode root = new TrieNode();
+        insert_(root,(char)0);
+        for (int i = 31; i >= 0; i--) {
+            mask |= (1 << i);
+            int temp = max | (1 << i);
+            TrieNode cur = root;
+            int prefix = 0;
+            for(int num : nums){
+                prefix ^= (num & mask);
+                int temp2 = temp ^ prefix;
+                int temp3 = 0;
+                TrieNode cur2 = root;
+                for(int j = 31; j >= 0; j--){
+                    int bit = (temp2 >> j) & 1;
+                    if(cur2.Map.containsKey((char)bit)){
+                        temp3 |= (1 << j);
+                        cur2 = cur2.Map.get((char)bit);
+                    }else{
+                        cur2 = cur2.Map.get((char)(1 - bit));
+                    }
+                }
+                max = Math.max(max,temp3);
+            }
+        }
+        return max;
         
     
-    // }
+    }
 
     
     

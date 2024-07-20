@@ -25,6 +25,21 @@ public static int count_of_pairs_optimized(int[] arr, int m) {
 }
 // given an array of size n return true if exists  a subarray with sum divisible by n sum[l-r]%n ==0
     public static boolean is_subarray_divisible_by_n(int[] arr, int n){
+        int sum = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+        for(int i = 0; i < arr.length; i++){
+            sum += arr[i];
+            int mod = sum % n;
+            if(map.containsKey(mod)){
+                if(i - map.get(mod) > 1){
+                    return true;
+                }
+            }else{
+                map.put(mod, i);
+            }
+        }
+        return false;
         
     }
     public static void main(String[] args) {
